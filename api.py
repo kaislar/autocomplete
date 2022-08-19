@@ -4,6 +4,7 @@ from Trie import Trie
 import json
 import random
 
+
 def load_queries_from_file(path, max_size=10**6):
     data = []
     i=0
@@ -15,8 +16,9 @@ def load_queries_from_file(path, max_size=10**6):
             if i== max_size:
                 break;
     # Generate random frequencies
-    queries = { i : random.randint(1, 1000) for i in data }
+    queries = {i: random.randint(1, 1000) for i in data}
     return queries
+
 
 app = Flask(__name__)
 
@@ -24,13 +26,13 @@ app = Flask(__name__)
 @app.route('/autocomplete', methods=['GET'])
 def hello():
     query = request.args.get('query')
-    res = t.query(query)
+    res = t.search(query)
     return res
 
 
 max_size = 10**6
 
-path = "./keyphrases.json"
+path = "D:\keyphrases.json\keyphrases.json"
 
 t = Trie()
 queries = load_queries_from_file(path)

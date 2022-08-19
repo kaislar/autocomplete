@@ -39,3 +39,40 @@ class Trie(object):
                 node = new_node
         # Mark the end of a query with the frequency counter
         node.count = queries_dict[query]
+
+    def dfs(self, node, prefix):
+        """Depth-first traversal of the trie
+
+        :param node (TrieNode): the root of the subtree
+        :param prefix (string): the current prefix to form the full queries when traversing the trie
+        """
+        if node.count != -1:
+            self.output.append((prefix + node.char, node.count))
+
+        for child in node.children.values():
+            self.dfs(child, prefix + node.char)
+
+    def search(self, x, top_n=10):
+        """Given an input (a prefix), find all queries stored in
+        the trie starting with the perfix, sort and return top_n queries based on the occurences.
+        """
+        # Use a variable within the class to keep all possible outputs
+        # As there can be more than one word with such prefix
+        self.output = []
+        node = self.root
+
+        # Check if the prefix is in the trie
+        for char in x:
+            if char in node.children:
+                node = node.children[char]
+            else:
+                # cannot found the prefix, return empty list
+                return []
+
+        # Traverse the trie to get all candidates
+        self.dfs(node, x[:-1])
+
+        # Sort the results in reverse order and return
+        self.output.sort(key=lambda x: x[1], reverse=True)
+
+        return self.output[0:top_n]
